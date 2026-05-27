@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Event Reminder{% endblock %}</title>
+
+  <!-- Google Fonts: Syne (display) + DM Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+  <!-- ── NAV ─────────────────────────────────────────────────────────────── -->
+  <nav class="nav">
+    <a href="{{ url_for('main.dashboard') }}" class="nav-brand">
+      <span class="nav-icon">◈</span>
+      <span>Remindly</span>
+    </a>
+    <div class="nav-links">
+      <a href="{{ url_for('main.dashboard') }}" class="nav-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}">Dashboard</a>
+      <a href="{{ url_for('main.add_event') }}"  class="nav-link btn-add {% if request.endpoint == 'main.add_event'  %}active{% endif %}">+ Add Event</a>
+    </div>
+  </nav>
+
+  <!-- ── FLASH MESSAGES ───────────────────────────────────────────────────── -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-zone">
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- ── PAGE CONTENT ─────────────────────────────────────────────────────── -->
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ── FOOTER ───────────────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <span>Remindly &mdash; never miss a moment</span>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

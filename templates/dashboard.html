@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Remindly{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <p class="page-label">Overview</p>
+    <h1 class="page-title">Your Events</h1>
+  </div>
+  <a href="{{ url_for('main.add_event') }}" class="btn btn-primary">+ New Event</a>
+</div>
+
+<!-- ── UPCOMING SOON (next 24 h) ────────────────────────────────────────── -->
+{% if upcoming_soon %}
+<section class="section">
+  <div class="section-header">
+    <span class="pulse-dot"></span>
+    <h2 class="section-title urgent">Happening Soon</h2>
+    <span class="badge badge-urgent">{{ upcoming_soon|length }} event{{ 's' if upcoming_soon|length != 1 }}</span>
+  </div>
+
+  <div class="cards-grid">
+    {% for event in upcoming_soon %}
+    <div class="card card-urgent">
+      <div class="card-top">
+        <span class="card-tag tag-urgent">⚡ Within 24 h</span>
+        <form action="{{ url_for('main.delete_event', event_id=event.id) }}" method="POST" class="inline-form">
+          <button type="submit" class="btn-delete" title="Delete event" onclick="return confirm('Delete this event?')">✕</button>
+        </form>
+      </div>
+      <h3 class="card-title">{{ event.title }}</h3>
+      {% if event.description %}
+        <p class="card-desc">{{ event.description }}</p>
+      {% endif %}
+      <div class="card-meta">
+        <span class="meta-item">📅 {{ event.date.strftime('%a, %d %b %Y') }}</span>
+        <span class="meta-item">🕐 {{ event.time.strftime('%I:%M %p') }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- ── UPCOMING EVENTS ───────────────────────────────────────────────────── -->
+{% if upcoming_regular %}
+<section class="section">
+  <div class="section-header">
+    <h2 class="section-title">Upcoming</h2>
+    <span class="badge">{{ upcoming_regular|length }} event{{ 's' if upcoming_regular|length != 1 }}</span>
+  </div>
+
+  <div class="cards-grid">
+    {% for event in upcoming_regular %}
+    <div class="card">
+      <div class="card-top">
+        <span class="card-tag">Upcoming</span>
+        <form action="{{ url_for('main.delete_event', event_id=event.id) }}" method="POST" class="inline-form">
+          <button type="submit" class="btn-delete" title="Delete event" onclick="return confirm('Delete this event?')">✕</button>
+        </form>
+      </div>
+      <h3 class="card-title">{{ event.title }}</h3>
+      {% if event.description %}
+        <p class="card-desc">{{ event.description }}</p>
+      {% endif %}
+      <div class="card-meta">
+        <span class="meta-item">📅 {{ event.date.strftime('%a, %d %b %Y') }}</span>
+        <span class="meta-item">🕐 {{ event.time.strftime('%I:%M %p') }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- ── EMPTY STATE ───────────────────────────────────────────────────────── -->
+{% if not upcoming_soon and not upcoming_regular %}
+<div class="empty-state">
+  <div class="empty-icon">◈</div>
+  <h2 class="empty-title">No upcoming events</h2>
+  <p class="empty-sub">Add your first event to get started.</p>
+  <a href="{{ url_for('main.add_event') }}" class="btn btn-primary">+ Add Event</a>
+</div>
+{% endif %}
+
+<!-- ── PAST EVENTS (last 5) ──────────────────────────────────────────────── -->
+{% if past_events %}
+<section class="section section-past">
+  <div class="section-header">
+    <h2 class="section-title muted">Recent Past</h2>
+  </div>
+  <div class="past-list">
+    {% for event in past_events %}
+    <div class="past-item">
+      <span class="past-title">{{ event.title }}</span>
+      <span class="past-date">{{ event.date.strftime('%d %b %Y') }} · {{ event.time.strftime('%I:%M %p') }}</span>
+      <form action="{{ url_for('main.delete_event', event_id=event.id) }}" method="POST" class="inline-form">
+        <button type="submit" class="btn-delete-sm" title="Delete" onclick="return confirm('Delete this event?')">✕</button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}
