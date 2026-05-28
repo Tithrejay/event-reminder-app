@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 gunicorn --bind=0.0.0.0 --timeout 600 "app:create_app()" 
+=======
+gunicorn --bind=0.0.0.0 --timeout 600 app:create_app()
+>>>>>>> 66cb99c81443c4e920daf8848e997a2225e06eef
